@@ -1,22 +1,21 @@
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Users, Film, Share2 } from 'lucide-react';
+import { Users, Film, Sparkles, ArrowRight, Check } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface Movie {
   id: string;
   title: string;
-  genre: string;
-  duration: string;
+  poster: string;
   rating: string;
-  image: string;
-  description: string;
+  year: string;
+  genre: string;
 }
 
 export default function GroupBookingPage() {
@@ -28,6 +27,10 @@ export default function GroupBookingPage() {
   const [selectedMovies, setSelectedMovies] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    fetchMovies();
+  }, []);
+
   const fetchMovies = async () => {
     setLoading(true);
     try {
@@ -36,6 +39,7 @@ export default function GroupBookingPage() {
       setMovies(data);
     } catch (error) {
       console.error('Error fetching movies:', error);
+      toast.error('Failed to load movies');
     } finally {
       setLoading(false);
     }
@@ -43,7 +47,6 @@ export default function GroupBookingPage() {
 
   const handleNextStep = () => {
     if (step === 1 && groupName && createdBy) {
-      fetchMovies();
       setStep(2);
     } else if (step === 2 && selectedMovies.length >= 2) {
       createGroup();
@@ -63,9 +66,11 @@ export default function GroupBookingPage() {
         })
       });
       const group = await res.json();
+      toast.success('Group created! Share the link with friends');
       router.push(`/group-booking/${group.id}`);
     } catch (error) {
       console.error('Error creating group:', error);
+      toast.error('Failed to create group');
     } finally {
       setLoading(false);
     }
@@ -80,143 +85,146 @@ export default function GroupBookingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-8 text-center">
-          <h1 className="text-4xl font-bold mb-2">Create Group Booking</h1>
-          <p className="text-muted-foreground">Book movie tickets together with your friends</p>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 gradient-animate opacity-30" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/20 via-background to-background" />
+
+      <div className="container relative mx-auto px-4 py-12">
+        {/* Header */}
+        <div className="mb-12 text-center fade-in">
+          <h1 className="text-5xl md:text-6xl font-bold mb-4 glow-text">
+            Create Your Squad
+          </h1>
+          <p className="text-xl text-muted-foreground">
+            {step === 1 ? 'Set up your group details' : 'Choose movies to vote on'}
+          </p>
         </div>
 
         {step === 1 && (
-          <Card className="max-w-2xl mx-auto">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5" />
-                Step 1: Group Information
-              </CardTitle>
-              <CardDescription>
-                Set up your group and invite your friends
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="groupName">Group Name</Label>
-                <Input
-                  id="groupName"
-                  placeholder="e.g., Friday Night Movie Squad"
-                  value={groupName}
-                  onChange={(e) => setGroupName(e.target.value)}
-                />
+          <Card className="max-w-2xl mx-auto glass glow-border fade-in">
+            <CardContent className="p-8 md:p-12 space-y-8">
+              <div className="flex items-center gap-3 text-primary mb-6">
+                <Users className="h-8 w-8" />
+                <h2 className="text-2xl font-semibold">Group Details</h2>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="createdBy">Your Name</Label>
-                <Input
-                  id="createdBy"
-                  placeholder="Enter your name"
-                  value={createdBy}
-                  onChange={(e) => setCreatedBy(e.target.value)}
-                />
+
+              <div className="space-y-6">
+                <div className="space-y-3">
+                  <Label htmlFor="groupName" className="text-lg">Squad Name</Label>
+                  <Input
+                    id="groupName"
+                    placeholder="e.g., Friday Night Movie Squad"
+                    value={groupName}
+                    onChange={(e) => setGroupName(e.target.value)}
+                    className="h-14 text-lg glass border-primary/30 focus:border-primary"
+                  />
+                </div>
+
+                <div className="space-y-3">
+                  <Label htmlFor="createdBy" className="text-lg">Your Name</Label>
+                  <Input
+                    id="createdBy"
+                    placeholder="Enter your name"
+                    value={createdBy}
+                    onChange={(e) => setCreatedBy(e.target.value)}
+                    className="h-14 text-lg glass border-primary/30 focus:border-primary"
+                  />
+                </div>
+
+                <Button 
+                  className="w-full h-14 text-lg glow-border bg-primary hover:bg-primary/90 transition-all duration-300 hover:scale-[1.02]" 
+                  onClick={handleNextStep}
+                  disabled={!groupName || !createdBy}
+                >
+                  Continue to Movie Selection
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
               </div>
-              <Button 
-                className="w-full" 
-                size="lg"
-                onClick={handleNextStep}
-                disabled={!groupName || !createdBy}
-              >
-                Continue to Movie Selection
-              </Button>
             </CardContent>
           </Card>
         )}
 
         {step === 2 && (
-          <div className="max-w-6xl mx-auto">
-            <Card className="mb-6">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Film className="h-5 w-5" />
-                  Step 2: Select Movies for Voting
-                </CardTitle>
-                <CardDescription>
-                  Choose at least 2 movies for your group to vote on
-                </CardDescription>
-              </CardHeader>
-            </Card>
+          <div className="max-w-7xl mx-auto fade-in">
+            <div className="mb-8 glass glow-border rounded-lg p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="flex items-center gap-2 text-primary mb-2">
+                    <Film className="h-6 w-6" />
+                    <h2 className="text-xl font-semibold">Select Movies to Vote</h2>
+                  </div>
+                  <p className="text-muted-foreground">
+                    Choose at least 2 movies • {selectedMovies.length} selected
+                  </p>
+                </div>
+                <Button
+                  size="lg"
+                  onClick={handleNextStep}
+                  disabled={selectedMovies.length < 2 || loading}
+                  className="glow-border bg-primary hover:bg-primary/90 transition-all duration-300 hover:scale-105"
+                >
+                  <Sparkles className="mr-2 h-5 w-5" />
+                  Create Squad
+                </Button>
+              </div>
+            </div>
 
             {loading ? (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground">Loading movies...</p>
+              <div className="text-center py-20">
+                <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent" />
+                <p className="mt-4 text-muted-foreground">Loading movies...</p>
               </div>
             ) : (
-              <>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-                  {movies.map((movie) => (
-                    <Card 
-                      key={movie.id} 
-                      className={`cursor-pointer transition-all ${
-                        selectedMovies.includes(movie.id) 
-                          ? 'ring-2 ring-primary' 
-                          : 'hover:shadow-lg'
-                      }`}
-                      onClick={() => toggleMovie(movie.id)}
-                    >
-                      <CardContent className="p-0">
-                        <div className="relative">
-                          <img
-                            src={movie.image}
-                            alt={movie.title}
-                            className="w-full h-64 object-cover rounded-t-lg"
-                          />
-                          <div className="absolute top-2 right-2">
-                            <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                              selectedMovies.includes(movie.id)
-                                ? 'bg-primary border-primary'
-                                : 'bg-background border-muted-foreground'
-                            }`}>
-                              {selectedMovies.includes(movie.id) && (
-                                <div className="w-3 h-3 bg-primary-foreground rounded-full" />
-                              )}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                {movies.map((movie) => (
+                  <Card 
+                    key={movie.id} 
+                    className={`cursor-pointer transition-all duration-300 hover:scale-105 glass ${
+                      selectedMovies.includes(movie.id) 
+                        ? 'glow-border ring-2 ring-primary' 
+                        : 'hover:border-primary/50'
+                    }`}
+                    onClick={() => toggleMovie(movie.id)}
+                  >
+                    <CardContent className="p-0">
+                      <div className="relative group">
+                        <img
+                          src={movie.poster}
+                          alt={movie.title}
+                          className="w-full h-96 object-cover rounded-t-lg"
+                        />
+                        {/* Overlay */}
+                        <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity ${
+                          selectedMovies.includes(movie.id) ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                        }`}>
+                          <div className="absolute bottom-0 left-0 right-0 p-4">
+                            <div className="flex items-center gap-2 text-yellow-400 text-sm mb-1">
+                              <span>⭐</span>
+                              <span className="font-semibold">{movie.rating}</span>
                             </div>
+                            <h3 className="font-bold text-white text-lg mb-1">{movie.title}</h3>
+                            <p className="text-xs text-gray-300">{movie.year} • {movie.genre}</p>
                           </div>
                         </div>
-                        <div className="p-4">
-                          <h3 className="font-semibold text-lg mb-1">{movie.title}</h3>
-                          <p className="text-sm text-muted-foreground mb-2">
-                            {movie.genre} • {movie.duration} • {movie.rating}
-                          </p>
-                          <p className="text-sm text-muted-foreground line-clamp-2">
-                            {movie.description}
-                          </p>
+                        
+                        {/* Checkmark */}
+                        <div className="absolute top-3 right-3">
+                          <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                            selectedMovies.includes(movie.id)
+                              ? 'bg-primary glow-border'
+                              : 'bg-black/50 border border-white/30'
+                          }`}>
+                            {selectedMovies.includes(movie.id) && (
+                              <Check className="w-6 h-6 text-white" />
+                            )}
+                          </div>
                         </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-
-                <Card className="sticky bottom-4">
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-semibold">
-                          {selectedMovies.length} movies selected
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          Select at least 2 movies to continue
-                        </p>
                       </div>
-                      <Button
-                        size="lg"
-                        onClick={handleNextStep}
-                        disabled={selectedMovies.length < 2 || loading}
-                        className="gap-2"
-                      >
-                        <Share2 className="h-4 w-4" />
-                        Create Group & Get Link
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             )}
           </div>
         )}

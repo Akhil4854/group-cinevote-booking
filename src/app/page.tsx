@@ -1,202 +1,77 @@
 "use client"
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Users, Vote, Calendar, CheckCircle, Film, Sparkles } from 'lucide-react';
+import { Film, Sparkles, Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/20">
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Animated background */}
+      <div className="absolute inset-0 gradient-animate opacity-50" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900/20 via-background to-background" />
+      
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-grid-white/10 [mask-image:radial-gradient(white,transparent_85%)]" />
-        <div className="container relative mx-auto px-4 py-20 md:py-32">
-          <div className="mx-auto max-w-4xl text-center">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-semibold text-primary">
-              <Sparkles className="h-4 w-4" />
-              Group Booking Made Easy
-            </div>
-            <h1 className="mb-6 text-5xl font-bold tracking-tight md:text-7xl">
-              Watch Movies
-              <br />
-              <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                Together, Decide Together
-              </span>
+      <section className="relative min-h-screen flex items-center justify-center px-4">
+        <div className="container mx-auto text-center fade-in">
+          {/* Logo */}
+          <div className="mb-8">
+            <h1 className="text-7xl md:text-9xl font-bold glow-text tracking-wider mb-4">
+              CINESQUAD
             </h1>
-            <p className="mb-8 text-xl text-muted-foreground md:text-2xl">
-              Book movie tickets as a group. Vote on your favorite movie and let democracy decide what you watch!
-            </p>
-            <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-              <Button 
-                size="lg" 
-                className="text-lg h-14 px-8"
-                onClick={() => router.push('/group-booking')}
-              >
-                <Users className="mr-2 h-5 w-5" />
-                Start Group Booking
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="text-lg h-14 px-8"
-              >
-                <Film className="mr-2 h-5 w-5" />
-                Browse Movies
-              </Button>
+            <div className="flex items-center justify-center gap-2 text-xl md:text-2xl text-muted-foreground">
+              <Film className="h-6 w-6 text-primary" />
+              <p className="font-light tracking-wide">Vote. Decide. Watch Together.</p>
+              <Film className="h-6 w-6 text-primary" />
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* How It Works */}
-      <section className="container mx-auto px-4 py-20">
-        <div className="mb-12 text-center">
-          <h2 className="mb-4 text-3xl font-bold md:text-4xl">How It Works</h2>
-          <p className="text-lg text-muted-foreground">
-            Four simple steps to book your group movie experience
-          </p>
-        </div>
-
-        <div className="mx-auto grid max-w-5xl gap-8 md:grid-cols-2 lg:grid-cols-4">
-          <Card className="relative overflow-hidden border-2 transition-all hover:shadow-lg">
-            <CardContent className="p-6">
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <Users className="h-6 w-6" />
-              </div>
-              <div className="absolute right-4 top-4 text-6xl font-bold text-muted/10">1</div>
-              <h3 className="mb-2 text-xl font-semibold">Create Group</h3>
-              <p className="text-sm text-muted-foreground">
-                Start a group and select movies you want to watch
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="relative overflow-hidden border-2 transition-all hover:shadow-lg">
-            <CardContent className="p-6">
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <Users className="h-6 w-6" />
-              </div>
-              <div className="absolute right-4 top-4 text-6xl font-bold text-muted/10">2</div>
-              <h3 className="mb-2 text-xl font-semibold">Invite Friends</h3>
-              <p className="text-sm text-muted-foreground">
-                Share the group link with your friends to join
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="relative overflow-hidden border-2 transition-all hover:shadow-lg">
-            <CardContent className="p-6">
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <Vote className="h-6 w-6" />
-              </div>
-              <div className="absolute right-4 top-4 text-6xl font-bold text-muted/10">3</div>
-              <h3 className="mb-2 text-xl font-semibold">Vote Together</h3>
-              <p className="text-sm text-muted-foreground">
-                Everyone votes for their favorite movie. Majority wins!
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="relative overflow-hidden border-2 transition-all hover:shadow-lg">
-            <CardContent className="p-6">
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <CheckCircle className="h-6 w-6" />
-              </div>
-              <div className="absolute right-4 top-4 text-6xl font-bold text-muted/10">4</div>
-              <h3 className="mb-2 text-xl font-semibold">Book & Enjoy</h3>
-              <p className="text-sm text-muted-foreground">
-                Select seats, confirm booking, and enjoy the movie!
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      {/* Features */}
-      <section className="container mx-auto px-4 py-20">
-        <div className="mx-auto max-w-5xl">
-          <div className="grid gap-8 md:grid-cols-2">
-            <Card className="border-2">
-              <CardContent className="p-8">
-                <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
-                  <Vote className="h-8 w-8 text-primary" />
-                </div>
-                <h3 className="mb-3 text-2xl font-bold">Democratic Voting</h3>
-                <p className="text-muted-foreground">
-                  Fair and transparent voting system ensures everyone's voice is heard. The movie with the most votes wins automatically.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2">
-              <CardContent className="p-8">
-                <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
-                  <Users className="h-8 w-8 text-primary" />
-                </div>
-                <h3 className="mb-3 text-2xl font-bold">Easy Sharing</h3>
-                <p className="text-muted-foreground">
-                  Share your group link instantly. Friends can join with just their name - no sign up required!
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2">
-              <CardContent className="p-8">
-                <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
-                  <Calendar className="h-8 w-8 text-primary" />
-                </div>
-                <h3 className="mb-3 text-2xl font-bold">Flexible Showtimes</h3>
-                <p className="text-muted-foreground">
-                  Choose from multiple showtimes that work for your group. Book the perfect time for everyone.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2">
-              <CardContent className="p-8">
-                <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
-                  <CheckCircle className="h-8 w-8 text-primary" />
-                </div>
-                <h3 className="mb-3 text-2xl font-bold">Seat Selection</h3>
-                <p className="text-muted-foreground">
-                  Select seats together and sit next to your friends. Visual seat map makes it easy to choose the best spots.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="container mx-auto px-4 py-20">
-        <Card className="mx-auto max-w-4xl border-2 bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5">
-          <CardContent className="p-12 text-center">
-            <h2 className="mb-4 text-3xl font-bold md:text-4xl">
-              Ready to Watch Together?
-            </h2>
-            <p className="mb-8 text-lg text-muted-foreground">
-              Create your first group booking now and let your friends vote on the perfect movie!
-            </p>
+          {/* CTA Button */}
+          <div className="mt-12">
             <Button 
               size="lg" 
-              className="text-lg h-14 px-8"
+              className="text-xl h-16 px-12 glow-border bg-primary hover:bg-primary/90 transition-all duration-300 hover:scale-105"
               onClick={() => router.push('/group-booking')}
             >
-              <Users className="mr-2 h-5 w-5" />
-              Create Group Booking
+              <Sparkles className="mr-2 h-6 w-6" />
+              Start Voting
             </Button>
-          </CardContent>
-        </Card>
+          </div>
+
+          {/* Decorative elements */}
+          <div className="mt-20 flex justify-center gap-8 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <Users className="h-4 w-4 text-primary" />
+              <span>Group Voting</span>
+            </div>
+            <div className="h-4 w-px bg-border" />
+            <div className="flex items-center gap-2">
+              <Film className="h-4 w-4 text-primary" />
+              <span>Instant Booking</span>
+            </div>
+            <div className="h-4 w-px bg-border" />
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-primary" />
+              <span>Cinema Experience</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+          <div className="w-6 h-10 border-2 border-primary/50 rounded-full flex items-start justify-center p-2">
+            <div className="w-1.5 h-3 bg-primary rounded-full" />
+          </div>
+        </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t">
-        <div className="container mx-auto px-4 py-8">
+      <footer className="relative border-t border-border/50 backdrop-blur-sm">
+        <div className="container mx-auto px-4 py-6">
           <div className="text-center text-sm text-muted-foreground">
-            <p>© 2024 CineQuad. All rights reserved.</p>
+            <p>© 2024 CINESQUAD. All rights reserved.</p>
           </div>
         </div>
       </footer>
